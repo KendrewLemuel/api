@@ -12,6 +12,93 @@ const selectProject = () => {
     });
   });
 };
+
+const insertProjectBatch = (projects) => {
+  return new Promise((resolve, reject) => {
+    // Map data menjadi string SQL untuk setiap baris
+    const values = projects
+      .map(
+        (p) =>
+          `('${p.name}', '${p.shortDescription}', '${p.description}', '${p.dirImage}', '${p.url}', '${p.createdAt}', '${p.updatedAt}')`
+      )
+      .join(", ");
+
+    // Query batch insert
+    const q = `
+      INSERT INTO project (name, short_description, description, dir_image, url, created_at, updated_at)
+      VALUES ${values}
+      RETURNING id;
+    `;
+
+    // Eksekusi query
+    db.query(q, (err, results) => {
+      if (err) {
+        return reject(err); // Jika ada error, reject promise
+      }
+      resolve({
+        rowCount: results.rowCount, // Jumlah baris yang berhasil dimasukkan
+        id: results.rows.map((row) => row.id), // Ambil semua id yang di-return
+      });
+    });
+  });
+};
+
+const insertProject = (
+  name,
+  shortDescription,
+  description,
+  dirImage,
+  url,
+  createdAt,
+  updatedAt
+) => {
+  return new Promise((resolve, reject) => {
+    const q = `
+      INSERT INTO project (name, short_description, description, dir_image, url, created_at, updated_at)
+      VALUES ('${name}', '${shortDescription}','${description}', '${dirImage}', '${url}', '${createdAt}', '${updatedAt}')
+      RETURNING id;
+    `;
+
+    console.log(q);
+
+    db.query(q, (err, results) => {
+      console.log(results);
+      if (err) {
+        return reject(err);
+      }
+      resolve({
+        rowCount: results.rowCount,
+        id: results.rows[0].id,
+      });
+    });
+  });
+};
+const updateProject = (
+  id,
+  name,
+  shortDescription,
+  description,
+  dirImage,
+  url,
+  updatedAt
+) => {
+  return new Promise((resolve, reject) => {
+    const q = `
+      UPDATE  project
+      SET name  = '${name}', short_description =  '${shortDescription}',description = '${description}', 
+      dir_image  = '${dirImage}', url = '${url}', updated_at ='${updatedAt}'
+      WHERE id = ${id}
+    `;
+
+    db.query(q, (err, results) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(results.rowCount);
+    });
+  });
+};
+
 const getProjectDetail = (projectId) => {
   return new Promise((resolve, reject) => {
     const q = `
@@ -74,4 +161,25 @@ const selectbanner = () => {
   });
 };
 
-module.exports = { selectProject, selectbanner, getProjectDetail };
+const deleteProject = (id) => {
+  return new Promise((resolve, reject) => {
+    const q = `DELETE  FROM project WHERE id = ${id}`;
+
+    db.query(q, (err, results) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(results);
+    });
+  });
+};
+
+module.exports = {
+  selectProject,
+  selectbanner,
+  getProjectDetail,
+  insertProjectBatch,
+  insertProject,
+  updateProject,
+  deleteProject,
+};

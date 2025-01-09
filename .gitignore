@@ -24,8 +24,6 @@ Thumbs.db
 # Environment variables
 .env
 
-# Package-lock and yarn.lock (optional, uncomment if needed)
-# package-lock.json
 # yarn.lock
 
 # Miscellaneous
