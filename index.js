@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const db = require("./config/database");
@@ -5,6 +6,9 @@ const response = require("./response");
 
 const { format } = require("date-fns");
 const now = format(new Date(), "yyyy-MM-dd");
+
+const cors = require("cors");
+app.use(cors());
 
 const {
   selectProject,
@@ -67,8 +71,6 @@ app.post("/project/insert", async (req, res) => {
       createdAt,
       updatedAt
     );
-
-    console.log(data);
 
     if (data.rowCount != 0) {
       const resData = {
@@ -182,7 +184,8 @@ app.delete("/project/delete", async (req, res) => {
   }
 });
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

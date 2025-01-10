@@ -59,10 +59,7 @@ const insertProject = (
       RETURNING id;
     `;
 
-    console.log(q);
-
     db.query(q, (err, results) => {
-      console.log(results);
       if (err) {
         return reject(err);
       }
