@@ -7,8 +7,8 @@ const response = require("./response");
 // const { format } = require("date-fns");
 const now = new Date().toISOString().split("T")[0];
 
-const cors = require("cors");
-app.use(cors());
+// const cors = require("cors");
+// app.use(cors());
 
 const {
   selectProject,
