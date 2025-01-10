@@ -4,8 +4,8 @@ const app = express();
 const db = require("./config/database");
 const response = require("./response");
 
-const { format } = require("date-fns");
-const now = format(new Date(), "yyyy-MM-dd");
+// const { format } = require("date-fns");
+const now = new Date().toISOString().split("T")[0];
 
 const cors = require("cors");
 app.use(cors());
